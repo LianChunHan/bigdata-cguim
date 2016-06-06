@@ -1,0 +1,48 @@
+Pima Indians Diabetes Database
+================
+
+資料前處理
+----------
+
+先處理缺值,並刪除無關的參數,最後將1/3的人設為訓練組與另外2/3的測試組測試 有無訓練成果
+
+預測模型建立
+------------
+
+使用迴歸分析,糖尿病是否會得 將diabetes設為y,其他各變項當作x
+
+``` r
+fit<-glm(diabetes~.,PimaIndiansDiabetesC[PimaIndiansDiabetesC$Test==F,],family="binomial")
+library(MASS)
+finalFit<-stepAIC(fit,direction = "both",trace = F)
+summary(finalFit)$coefficients
+```
+
+    ##                Estimate  Std. Error   z value     Pr(>|z|)
+    ## (Intercept)  8.13437906 0.836180274  9.728021 2.290053e-22
+    ## pregnant    -0.12099978 0.040712710 -2.972039 2.958287e-03
+    ## glucose     -0.03225066 0.004184959 -7.706327 1.294908e-14
+    ## pressure     0.01689285 0.006335866  2.666226 7.670802e-03
+    ## mass        -0.09409325 0.017462295 -5.388367 7.110089e-08
+    ## pedigree    -0.58247098 0.359924156 -1.618316 1.055945e-01
+    ## age         -0.02187870 0.011269296 -1.941443 5.220451e-02
+
+install.packages("caret") install.packages("lattice") install.packages("ggplot2") \#\#預測模型驗證，解釋 將正面的pos改成第一,sesitvity預測值達0.73左右
+
+    ## Warning: package 'caret' was built under R version 3.2.5
+
+    ## Loading required package: lattice
+
+    ## Warning: package 'lattice' was built under R version 3.2.5
+
+    ## Loading required package: ggplot2
+
+    ## Warning: package 'ggplot2' was built under R version 3.2.5
+
+    ## [1] 0.6847826
+
+    ## [1] 0.7743902
+
+    ## [1] 0.63
+
+    ## [1] 0.8141026
